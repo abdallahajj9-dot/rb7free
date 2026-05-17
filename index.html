@@ -2078,7 +2078,7 @@ a{text-decoration:none;color:inherit}
           كيف تنشر مجاناً؟
         </div>
         <div style="font-size:.78rem;color:var(--txt2);line-height:1.75">
-          لتتمكن من نشر إعلانك <strong>مجاناً</strong> قم بالانضمام لصفحاتنا على منصات التواصل الاجتماعي أولاً، ثم عُد هنا وأكمل المهام للحصول على حق النشر.
+          لتتمكن من نشر إعلانك <strong>مجاناً</strong> قم بالانضمام لصفحاتنا على منصات التواصل الاجتماعي أولاً.
         </div>
       </div>
       <!-- Progress bar -->
@@ -3892,7 +3892,9 @@ function loadAds(){
 }
 function buildAdPost(a){
   const isUserAd=a.isUserAd||false;
-  const typeLabel=isUserAd?'👤 إعلان مستخدم':'💰 إعلان ممول';
+  const typeLabel=isUserAd
+    ?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>&nbsp;<span style="font-size:.7rem;font-weight:700">إعلان ممول</span>'
+    :'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>&nbsp;<span style="font-size:.7rem;font-weight:700">إعلان ممول</span>';
   const typeCls=isUserAd?'apt-post':'apt-sponsored';
   const t=a.createdAt?new Date(a.createdAt):new Date();
   const ts=t.toLocaleDateString('ar-SA');
@@ -4027,7 +4029,7 @@ function renderAdAdList(){
     const republishBtn=expired?`<button class="btn-ed" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--grn)" onclick="republishAd('${a.id}')">🔄 إعادة رفع</button>`:''
     return`<div class="ad-item${expired?' ad-item-expired':''}" style="${expired?'opacity:.65;':''}" >
       <div class="ad-ii"><div class="ad-ic" style="${expired?'background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.25)':''}">${expired?'<svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'}</div>
-      <div class="ad-in-wrap"><div class="ad-in">${esc(a.title||'إعلان')}</div><div class="ad-im">${a.isUserAd?'👤 '+esc(a.addedBy||'مستخدم'):'إعلان ممول'}${expInfo}</div></div></div>
+      <div class="ad-in-wrap"><div class="ad-in">${esc(a.title||'إعلان')}</div><div class="ad-im">${a.isUserAd?'👤 إعلان ممول — '+esc(a.addedBy||'مستخدم'):'💰 إعلان ممول'}${expInfo}</div></div></div>
       <div class="ad-ia">
         <button class="btn-ord" title="أعلى" onclick="moveAd('${a.id}',-1)" ${i===0?'disabled':''}>↑</button>
         <button class="btn-ord" title="أسفل" onclick="moveAd('${a.id}',1)" ${i===S.ads.length-1?'disabled':''}>↓</button>
@@ -4387,7 +4389,9 @@ function doTaskOpen(i){
   var t=_uadTasks[i];if(!t||t.done||t.waiting)return;
   window.open(t.url,'_blank','noopener,noreferrer');
   t.waiting=true;
-  t.readyAt=Date.now()+_taskMinTime;
+  /* المهمة الأولى (YouTube) = 10 ثواني، باقي المهام = 5 ثواني */
+  var waitMs = i === 0 ? 10000 : 5000;
+  t.readyAt=Date.now()+waitMs;
 
   var card=document.getElementById('uadTask-'+i);
   var desc=document.getElementById('uadTaskDesc-'+i);
