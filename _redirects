@@ -1,0 +1,2 @@
+/firebase-messaging-sw.js /upload/firebase-messaging-sw.js 200
+/sounds/* /upload/sounds/:splat 200
